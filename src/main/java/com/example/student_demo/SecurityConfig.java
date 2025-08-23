@@ -43,10 +43,13 @@ public class SecurityConfig {
 
                 // define authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/students/").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/students/").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/students/").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/students/").authenticated()
+                        // Allow Swagger URLs
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/students","/students/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/students/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/students/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/students/**").authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();

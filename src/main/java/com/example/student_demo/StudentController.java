@@ -1,7 +1,7 @@
 package com.example.student_demo;
 
 import com.example.student_demo.Student;
-import com.example.student_demo.service.;
+import com.example.student_demo.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
