@@ -3,7 +3,7 @@ package com.example.student_demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,7 +15,7 @@ public class StudentController {
 
     //post
     @PostMapping
-    public Student addStudent(@RequestBody  Student student)
+    public Student addStudent(@Valid @RequestBody  Student student)
     {
         return studentRepositary.save(student);
 
@@ -35,7 +35,7 @@ public class StudentController {
 
 
     @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
+    public Student updateStudent(@PathVariable Long id, @Valid @RequestBody Student studentDetails) {
         return studentRepositary.findById(id)
                 .map(student -> {
                     student.setName(studentDetails.getName());
