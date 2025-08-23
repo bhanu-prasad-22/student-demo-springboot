@@ -1,57 +1,54 @@
 package com.example.student_demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import com.example.student_demo.Student;
+import com.example.student_demo.service.StudentService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
 
-    @Autowired
-    private StudentRepositary studentRepositary;
+    private final StudentService studentService;
 
-    //post
+    // Constructor injection (recommended over @Autowired)
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    // CREATE
     @PostMapping
-    public Student addStudent(@Valid @RequestBody  Student student)
-    {
-        return studentRepositary.save(student);
-
+    public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student) {
+        Student saved = studentService.create(student);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
+
+    // READ all
     @GetMapping
-    public List<Student> getAllStudents()
-    {
-        return studentRepositary.findAll();
+    public List<Student> getAllStudents() {
+        return studentService.getAll();
     }
+
+    // READ by ID
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable Long id)
-    {
-        return studentRepositary.findById(id)
-                .orElseThrow(() -> new
-            ResourceNotFoundException("Student not found with id: "+id));
+    public Student getStudentById(@PathVariable Long id) {
+        return studentService.getById(id);
     }
 
-
+    // UPDATE
     @PutMapping("/{id}")
     public Student updateStudent(@PathVariable Long id, @Valid @RequestBody Student studentDetails) {
-        return studentRepositary.findById(id)
-                .map(student -> {
-                    student.setName(studentDetails.getName());
-                    student.setEmail(studentDetails.getEmail());
-                    return studentRepositary.save(student);
-                })
-                .orElseThrow(() -> new RuntimeException("Student not found with id " + id));
+        return studentService.update(id, studentDetails);
     }
 
-
+    // DELETE
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id)
-    {
-        Student student=studentRepositary.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found with id " + id));
-        studentRepositary.delete(student);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteStudent(@PathVariable Long id) {
+        studentService.delete(id);
     }
-
 }
