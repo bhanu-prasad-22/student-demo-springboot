@@ -1,6 +1,6 @@
-package com.example.student_demo;
+package com.example.student_demo.controller;
 
-import com.example.student_demo.Student;
+import com.example.student_demo.entity.Student;
 import com.example.student_demo.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

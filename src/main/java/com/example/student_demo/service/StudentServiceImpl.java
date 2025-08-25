@@ -1,9 +1,9 @@
 // src/main/java/com/example/student_demo/service/StudentServiceImpl.java
 package com.example.student_demo.service;
 
-import com.example.student_demo.Student;
-import com.example.student_demo.StudentRepositary;
-import com.example.student_demo.ResourceNotFoundException;
+import com.example.student_demo.entity.Student;
+import com.example.student_demo.repository.StudentRepositary;
+import com.example.student_demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
