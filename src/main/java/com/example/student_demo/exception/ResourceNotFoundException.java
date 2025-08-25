@@ -1,4 +1,4 @@
-package com.example.student_demo;
+package com.example.student_demo.exception;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String msg)
