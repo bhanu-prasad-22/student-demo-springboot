@@ -41,8 +41,10 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public Student update(Long id, Student s) {
         Student existing = getById(id);
+        existing.setCourse(s.getCourse());
         existing.setName(s.getName());
         existing.setEmail(s.getEmail());
+        existing.setAge(s.getAge());
         return repo.save(existing);
     }
 
