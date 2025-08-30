@@ -2,6 +2,8 @@ package com.example.student_demo.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,9 +14,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     // Handle Resource Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+        logger.error("Resource not found at [{}]: {}", request.getRequestURI(), ex.getMessage());
         ApiError error = new ApiError(
                 HttpStatus.NOT_FOUND.value(),
                 "Not Found",
@@ -34,6 +39,7 @@ public class GlobalExceptionHandler {
             msg.append(fieldName).append(": ").append(errorMessage).append("; ");
         });
 
+        logger.warn("Validation failed at [{}]: {}", request.getRequestURI(), msg.toString());
         ApiError error = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Error",
@@ -51,6 +57,7 @@ public class GlobalExceptionHandler {
                 msg.append(cv.getPropertyPath()).append(": ").append(cv.getMessage()).append("; ")
         );
 
+        logger.warn("Constraint violation at [{}]: {}", request.getRequestURI(), msg.toString());
         ApiError error = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
                 "Constraint Violation",
@@ -63,6 +70,7 @@ public class GlobalExceptionHandler {
     // Handle all other exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex, HttpServletRequest request) {
+        logger.error("Unexpected error at [{}]", request.getRequestURI(), ex);
         ApiError error = new ApiError(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
