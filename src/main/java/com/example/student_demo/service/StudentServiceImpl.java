@@ -4,6 +4,8 @@ package com.example.student_demo.service;
 import com.example.student_demo.entity.Student;
 import com.example.student_demo.repository.StudentRepositary;
 import com.example.student_demo.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,11 @@ public class StudentServiceImpl implements StudentService {
     @Transactional(readOnly = true)
     public List<Student> getAll() {
         return repo.findAll();
+    }
+
+    @Override
+    public Page<Student> getAll(Pageable pageable) {
+        return repo.findAll(pageable);
     }
 
     @Override
