@@ -44,15 +44,19 @@ public class StudentController {
         return studentService.getById(id);
     }
 
-    // READ all with pagination + sorting
-    @GetMapping
-    public Page<Student> getAllStudents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy
+
+    // GET /students/paginated?page=0&size=5&sort=name
+    @GetMapping("/paginated")
+    public Page<Student> getStudents(
+            @RequestParam(defaultValue = "0") int page,   // page number (0-indexed)
+            @RequestParam(defaultValue = "5") int size,  // size per page
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return studentService.getAll(pageable);
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return studentService.getAllPaginated(pageable);
     }
     // UPDATE
     @PutMapping("/{id}")
