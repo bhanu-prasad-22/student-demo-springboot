@@ -39,10 +39,6 @@ public class StudentServiceImpl implements StudentService {
         return repo.findAll();
     }
 
-    @Override
-    public Page<Student> getAll(Pageable pageable) {
-        return repo.findAll(pageable);
-    }
 
     @Override
     @Transactional
@@ -60,5 +56,10 @@ public class StudentServiceImpl implements StudentService {
     public void delete(Long id) {
         Student existing = getById(id);
         repo.delete(existing);
+    }
+
+    @Override
+    public Page<Student> getAllPaginated(Pageable pageable) {
+              return repo.findAll(pageable);
     }
 }

@@ -10,7 +10,8 @@ public interface StudentService {
     Student create(Student s);
         Student getById(Long id);
         List<Student> getAll();
-        Page<Student> getAll(Pageable pageable);
         Student update(Long id,Student s);
         void delete(Long id);
+
+    Page<Student> getAllPaginated(Pageable pageable);
 }
