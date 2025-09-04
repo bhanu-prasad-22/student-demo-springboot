@@ -21,7 +21,6 @@ public class StudentServiceImpl implements StudentService {
     public StudentServiceImpl(StudentRepositary repo) {
         this.repo = repo;
     }
-}
 
     @Override
     @Transactional
@@ -75,5 +74,4 @@ public class StudentServiceImpl implements StudentService {
     public Page<Student> getAllPaginated(Pageable pageable) {
         return repo.findAll(pageable);
     }
-
 }
