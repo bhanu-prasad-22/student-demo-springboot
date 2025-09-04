@@ -22,6 +22,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentServiceImpl(StudentRepositary repo) {
         this.repo = repo;
     }
+}
 
     @Override
     @Transactional
