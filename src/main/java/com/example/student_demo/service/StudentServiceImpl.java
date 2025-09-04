@@ -75,4 +75,5 @@ public class StudentServiceImpl implements StudentService {
     public Page<Student> getAllPaginated(Pageable pageable) {
         return repo.findAll(pageable);
     }
+
 }
