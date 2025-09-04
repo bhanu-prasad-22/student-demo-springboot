@@ -1,12 +1,14 @@
 package com.example.student_demo.controller;
 
 import com.example.student_demo.JwtUtil;
+import com.example.student_demo.dto.LoginRequest;
+import com.example.student_demo.dto.LoginResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 public class AuthController {
@@ -20,21 +22,26 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> user) {
-        String username = user.get("username");
-        String password = user.get("password");
-
+    public LoginResponse login(@RequestBody LoginRequest request) {
         try {
-            // Authenticate user credentials
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
+
+            // Extract role (first authority only, if single role per user)
+            String role = authentication.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()
+                    .orElse("USER");
+
+            // Generate JWT
+            String token = jwtUtil.generateToken(request.getUsername());
+
+            return new LoginResponse(token, role);
+
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid username or password");
         }
-
-        // Generate JWT
-        String token = jwtUtil.generateToken(username);
-        return Map.of("token", token);
     }
 }

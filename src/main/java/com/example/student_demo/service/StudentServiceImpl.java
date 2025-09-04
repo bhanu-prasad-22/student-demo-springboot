@@ -27,7 +27,12 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @CachePut(value="students",key="#result.id")//cache new student
     public Student create(Student s) {
-        return repo.save(s);
+        Student student=new Student();
+        student.setName(s.getName());
+        student.setEmail(s.getEmail());
+        student.setAge(s.getAge());
+        student.setCourse(s.getCourse());
+        return repo.save(student);
     }
 
     @Override
@@ -70,4 +75,4 @@ public class StudentServiceImpl implements StudentService {
     public Page<Student> getAllPaginated(Pageable pageable) {
               return repo.findAll(pageable);
     }
-}
+
