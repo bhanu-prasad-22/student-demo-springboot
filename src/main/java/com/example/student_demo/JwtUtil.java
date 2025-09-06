@@ -30,6 +30,13 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().get("role", String.class);
     }
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
     public boolean validateToken(String token, String username) {
         return extractUsername(token).equals(username) &&
