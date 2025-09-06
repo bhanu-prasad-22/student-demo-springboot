@@ -41,8 +41,12 @@ public class SecurityConfig {
                 .password(encoder.encode("1234"))
                 .roles("USER")
                 .build();
-
-        return new org.springframework.security.provisioning.InMemoryUserDetailsManager(user);
+        var admin = org.springframework.security.core.userdetails.User.builder()
+                .username("admin")
+                .password(encoder.encode("admin123"))
+                .roles("ADMIN")
+                .build();
+        return new org.springframework.security.provisioning.InMemoryUserDetailsManager(user,admin);
     }
 
     @Bean
@@ -51,8 +55,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/","/login","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/", "/login","/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/students","/students/**").permitAll()
+                        .requestMatchers("/students/**").hasRole("ADMIN")   // ✅ only ADMIN can POST/PUT/DELETE
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))

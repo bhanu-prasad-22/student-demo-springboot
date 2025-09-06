@@ -28,15 +28,15 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
 
-            // Extract role (first authority only, if single role per user)
+            // Extract role (first authority only, since you use single role per user)
             String role = authentication.getAuthorities()
                     .stream()
                     .map(GrantedAuthority::getAuthority)
                     .findFirst()
                     .orElse("USER");
 
-            // Generate JWT
-            String token = jwtUtil.generateToken(request.getUsername());
+            // ✅ Pass role into JWT
+            String token = jwtUtil.generateToken(request.getUsername(), role);
 
             return new LoginResponse(token, role);
 
@@ -44,4 +44,5 @@ public class AuthController {
             throw new RuntimeException("Invalid username or password");
         }
     }
+
 }
