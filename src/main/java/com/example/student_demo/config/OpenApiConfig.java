@@ -12,21 +12,19 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI studentApi() {
+    public OpenAPI customizeOpenAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("Student Demo API")
-                        .description("CRUD API with validation, service layer & JWT authentication")
-                        .version("v1.0"))
-                // ⚡ Add JWT Security
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
-                                        .bearerFormat("JWT")
-                        )
-                )
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
+                                        .bearerFormat("JWT")))
+                .info(new Info().title("Student API")
+                        .description("API with role-based access. \n\n" +
+                                "🔑 ADMIN: can create/update/delete students.\n" +
+                                "🔑 USER: can only view students."));
     }
+
 }

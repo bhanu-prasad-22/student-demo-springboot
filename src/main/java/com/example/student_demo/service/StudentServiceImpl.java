@@ -24,7 +24,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    @CachePut(value = "students", key = "#result.id")//cache new student
+    @CachePut(value = "studentsAll", key = "#result.id")//cache new student
     public Student create(Student s) {
         Student student = new Student();
         student.setName(s.getName());
@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "students", key = "#id")//cache lookups by id
+    @Cacheable(value = "studentsAll", key = "#id")//cache lookups by id
     public Student getById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));
@@ -52,7 +52,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    @CachePut(value = "students", key = "#id")//update cache when student updated
+    @CachePut(value = "studentsAll", key = "#id")//update cache when student updated
     public Student update(Long id, Student s) {
         Student existing = getById(id);
         existing.setCourse(s.getCourse());
@@ -64,7 +64,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "students", key = "#id")//remove cache entry when deleted
+    @CacheEvict(value = "studentsAll", key = "#id")//remove cache entry when deleted
     public void delete(Long id) {
         Student existing = getById(id);
         repo.delete(existing);
